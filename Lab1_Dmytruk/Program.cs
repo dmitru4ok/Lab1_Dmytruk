@@ -11,7 +11,8 @@ namespace Lab1_Dmytruk
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             //Task1();
-            Task2();
+            //Task2();
+            Task3();
             Console.ReadLine();
         }
 
@@ -80,6 +81,71 @@ namespace Lab1_Dmytruk
             else
             {
                 Console.WriteLine("Введено нечислові дані");
+            }
+        }
+        static void Task3()
+        {
+            const int rows = 7;
+            const int cols = 6;
+            int[,] matrix = new int[rows, cols] {
+                {-1,   2,  4,  5,   7, -2},
+                {-2,   2, -7, -8,  12, -9},
+                {-2,  -1,  2,  4,   6,  7},
+                {-1,   1, -1, -1,   1,  1},
+                {-22, 11,  8,  9,   4,  3},
+                {-3,   5,  6,  0,   4,  2},
+                {-7,   2, -5, -7,  23,  2}
+            };
+            uint[] a = new uint[cols];
+            for (int j = 0; j < matrix.GetLength(1); ++j)
+            {
+                uint quantity = 0;
+                for (int i = 0; i < matrix.GetLength(0); ++i)
+                {
+                    if (matrix[i, j] > 0) { quantity++; }
+                }
+                a[j] = quantity;
+            }
+
+            Console.WriteLine("Введена матриця: ");
+            PrintIntMatrix(matrix);
+            Console.WriteLine("\n\nВектор А - кількості додатніх елементів у стовпцях: ");
+            PrintUintArray(a);
+            uint MaxElemOfA = MaxOFArr(a);
+            Console.WriteLine($"\nНайбільший елемент вектора А: {MaxElemOfA}"); 
+        }
+
+        static void PrintUintArray(uint[] arr)
+        {
+            for (int i = 0; i < arr.Length; ++i)
+            {
+                Console.Write($"{arr[i]}|");
+            }
+            Console.Write('\n');
+        }
+
+        static uint MaxOFArr(uint[] arr)
+        {
+            uint MaxEl = arr[0];
+            for (int i = 1; i < arr.Length; ++i)
+            {
+                if (arr[i] > MaxEl)
+                {
+                    MaxEl = arr[i];
+                }
+            }
+            return MaxEl;
+        }
+
+        static void PrintIntMatrix(int[,] arr)
+        {
+            for (int i = 0; i < arr.GetLength(0); ++i)
+            {
+                for (int j = 0; j < arr.GetLength(1); ++j)
+                {
+                    Console.Write($"{arr[i,j]}|".PadLeft(5)); //форматування виводу матриці
+                }
+                Console.Write('\n');
             }
         }
     }
