@@ -19,14 +19,14 @@ namespace Lab1_Dmytruk
             Console.Write("Введіть вісімкове число: ");
             string input = Console.ReadLine();
             
-            int result = 0;
-            int PowVariable = 1;
+            uint result = 0;
+            uint PowVariable = 1;
             bool InputIsCorrect = true;
             for (int i = input.Length - 1; i>=0; --i)
             {
                 if (input[i] >= '0' && input[i] <= '7')
                 {
-                    result += PowVariable * Convert.ToInt32(input[i] - '0'); //або можна input[i].ToString()
+                    result += PowVariable * Convert.ToUInt32(input[i] - '0'); //або можна input[i].ToString()
                     PowVariable *= 8;
                 } 
                 else
