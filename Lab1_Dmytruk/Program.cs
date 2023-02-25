@@ -6,42 +6,29 @@ namespace Lab1_Dmytruk
 {
     class Program
     {
-        
+
         static void Main()
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
-            //Task1();
+            Task1();
             //Task2();
-            Task3();
+            //Task3();
             Console.ReadLine();
         }
 
         static void Task1()
         {
-            Console.Write("Введіть вісімкове число: ");
+            Console.Write("Введіть десяткове число у вісімковій системі: ");
             string input = Console.ReadLine();
-            
-            uint result = 0;
-            uint PowVariable = 1;
-            bool InputIsCorrect = true;
-            for (int i = input.Length - 1; i>=0; --i)
-            {
-                if (input[i] >= '0' && input[i] <= '7')
-                {
-                    result += PowVariable * Convert.ToUInt32(input[i] - '0'); //або можна input[i].ToString()
-                    PowVariable *= 8;
-                } 
-                else
-                {
-                    InputIsCorrect = false;
-                    break; 
-                }
-            }
-
+            string[] split = input.Split('.');
+            bool InputIsCorrect = Task3IsInputCorrect(split);
+          
             if (InputIsCorrect)
             {
-                Console.WriteLine($"Число {input} у вісімковiй рівне {Convert.ToUInt32(input, 8)} у десятковій");
-                Console.WriteLine($"Число {input} у вісімковiй рівне {result} у десятковій");
+                int ConvertedInt = ConvertIntPart(split[0]);
+                double ConvertedDecimal = ConvertDecimalPart(split[1]);
+                double total = (input[0] == '-') ? ConvertedInt - ConvertedDecimal : ConvertedInt + ConvertedDecimal;
+                Console.WriteLine($"Число {input} у вісімковiй рівне {total} у десятковій");
             }
             else
             {
@@ -112,7 +99,7 @@ namespace Lab1_Dmytruk
             Console.WriteLine("\n\nВектор А - кількості додатніх елементів у стовпцях: ");
             PrintUintArray(a);
             uint MaxElemOfA = MaxOFArr(a);
-            Console.WriteLine($"\nНайбільший елемент вектора А: {MaxElemOfA}"); 
+            Console.WriteLine($"\nНайбільший елемент вектора А: {MaxElemOfA}");
         }
 
         static void PrintUintArray(uint[] arr)
@@ -143,10 +130,61 @@ namespace Lab1_Dmytruk
             {
                 for (int j = 0; j < arr.GetLength(1); ++j)
                 {
-                    Console.Write($"{arr[i,j]}|".PadLeft(5)); //форматування виводу матриці
+                    Console.Write($"{arr[i, j]}|".PadLeft(5)); //форматування виводу матриці
                 }
                 Console.Write('\n');
             }
+        }
+
+        static int ConvertIntPart(string input)
+        {
+            int result = 0;
+            int PowVariable = 1;
+            int LastIterIndex = ('-' == input[0]) ? 1 : 0;
+            for (int i = input.Length - 1; i >= LastIterIndex; --i)
+            {
+                result += PowVariable * Convert.ToInt32(input[i] - '0'); //або можна input[i].ToString()
+                PowVariable *= 8;
+            }
+            if (LastIterIndex == 1)
+            {
+                return -result;
+            }
+            return result;
+        }
+
+        static double ConvertDecimalPart(string DecInput)
+        {
+            double result = 0.0;
+            double PowValue = 1.0 / 8.0;
+            for (int i = 0; i < DecInput.Length; ++i)
+            {
+                result += (double)Convert.ToInt32(DecInput[i] - '0') * PowValue;
+                PowValue /= 8.0;
+            }
+            return result;
+        }
+
+        static bool Task3IsInputCorrect(string[] split)
+        {
+            if (split.Length != 2) { return false; }
+            int StartIndex = 0;
+            if (split[0][0] == '-') { StartIndex = 1; }
+            for (int i = StartIndex; i < split[0].Length; ++i)
+            {
+                if (!(split[0][i] >= '0' && split[0][i] <= '7'))
+                {
+                    return false;
+                }
+            }
+            for (int i = 0; i < split[1].Length; ++i)
+            {
+                if (!(split[1][i] >= '0' && split[1][i] <= '7'))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }
