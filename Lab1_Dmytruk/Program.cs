@@ -10,38 +10,34 @@ namespace Lab1_Dmytruk
         static void Main()
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
-            //Task1();
+            Task1();
             //Task2();
-            Task3();
+            //Task3();
             Console.ReadLine();
         }
 
         static void Task1()
         {
-            Console.Write("Введіть вісімкове число: ");
+            Console.Write("Введіть вісімкове число (дробова частина через кому): ");
             string input = Console.ReadLine();
-            
-            uint result = 0;
-            uint PowVariable = 1;
+            string[] split = input.Split(',');
             bool InputIsCorrect = true;
-            for (int i = input.Length - 1; i>=0; --i)
-            {
-                if (input[i] >= '0' && input[i] <= '7')
-                {
-                    result += PowVariable * Convert.ToUInt32(input[i] - '0'); //або можна input[i].ToString()
-                    PowVariable *= 8;
-                } 
-                else
-                {
-                    InputIsCorrect = false;
-                    break; 
-                }
-            }
-
+            bool IsNegative = (input[0] == '-') ? true : false;
+            int ConvertedInt = ConvertIntPart(split[0], ref InputIsCorrect);
+            double ConvertedDecimal = ConvertDecimalPart(split[1]);
+            double total = (IsNegative) ? ConvertedInt - ConvertedDecimal : ConvertedInt + ConvertedDecimal;
             if (InputIsCorrect)
             {
-                Console.WriteLine($"Число {input} у вісімковiй рівне {Convert.ToUInt32(input, 8)} у десятковій");
-                Console.WriteLine($"Число {input} у вісімковiй рівне {result} у десятковій");
+                if (IsNegative)
+                {
+                    Console.WriteLine($"Число {input} у вісімковiй рівне -{Convert.ToDouble((input.Substring(1), 8))} у десятковій");
+                }
+                else
+                {
+                    Console.WriteLine($"Число {input} у вісімковiй рівне {Convert.ToDouble((input, 8))} у десятковій");
+                }
+                
+                Console.WriteLine($"Число {input} у вісімковiй рівне {total} у десятковій");
             }
             else
             {
@@ -147,6 +143,43 @@ namespace Lab1_Dmytruk
                 }
                 Console.Write('\n');
             }
+        }
+
+        static int ConvertIntPart(string input, ref bool InputIsCorrect)
+        {
+            int result = 0;
+            int PowVariable = 1;
+            int LastIterIndex = ('-' == input[0]) ? 1 : 0;
+            for (int i = input.Length - 1; i >= LastIterIndex; --i)
+            {
+                if (input[i] >= '0' && input[i] <= '7')
+                {
+                    result += PowVariable * Convert.ToInt32(input[i] - '0'); //або можна input[i].ToString()
+                    PowVariable *= 8;
+                }
+                else
+                {
+                    InputIsCorrect = false;
+                    break;
+                }
+            }
+            if (LastIterIndex == 1)
+            {
+                return -result; 
+            }
+            return result;
+        }
+
+        static double ConvertDecimalPart(string DecInput)
+        {
+            double result = 0.0;
+            double PowValue = 1.0 / 8.0;
+            for (int i = 0; i < DecInput.Length; ++i)
+            {
+                result += (double)Convert.ToInt32(DecInput[i] - '0') * PowValue;
+                PowValue /= 8.0;
+            }
+            return result;
         }
     }
 }
